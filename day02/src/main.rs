@@ -16,8 +16,6 @@ fn is_game_valid(game: &str) -> bool {
 
 fn get_game_number(s: &str) -> i32 {
     s.split(" ").skip(1).next().unwrap().parse::<i32>().unwrap()
-
-
 }
 
 fn check_game_turn(s: &str) -> i32 {
