@@ -3,9 +3,9 @@ use std::collections::HashMap;
 const MAX_VALUES: [(&str, i32); 3] = [("red", 12), ("green", 13), ("blue", 14)];
 
 fn is_game_valid(game: &str) -> bool {
-    game.split(";").all(|x| {
-        x.split(",").all(|x| {
-            let split: Vec<_> = x.split(" ").collect();
+    game.split(';').all(|x| {
+        x.split(',').all(|x| {
+            let split: Vec<_> = x.split(' ').collect();
             match MAX_VALUES.iter().find(|&&y| y.0 == split[2]) {
                 Some(&(_, max)) => split[1].parse::<i32>().unwrap() <= max,
                 None => false,
@@ -15,11 +15,11 @@ fn is_game_valid(game: &str) -> bool {
 }
 
 fn get_game_number(s: &str) -> i32 {
-    s.split(" ").skip(1).next().unwrap().parse::<i32>().unwrap()
+    s.split(' ').nth(1).unwrap().parse::<i32>().unwrap()
 }
 
 fn check_game_turn(s: &str) -> i32 {
-    let splits: Vec<_> = s.split(":").collect();
+    let splits: Vec<_> = s.split(':').collect();
     match is_game_valid(splits[1]) {
         true => get_game_number(splits[0]),
         false => 0,
@@ -31,10 +31,10 @@ fn get_minimum_required_cubes(s: &str) -> i32 {
     // create a map between strings and numbers
     let mut minimums: HashMap<&str, i32> = HashMap::new();
 
-    s.split(";").for_each(|x| {
-        x.split(",")
+    s.split(';').for_each(|x| {
+        x.split(',')
             .map(|x| {
-                let split = x.split(" ").collect::<Vec<&str>>();
+                let split = x.split(' ').collect::<Vec<&str>>();
                 let (cube_number, cube_color) = (split[1].parse::<i32>().unwrap(), split[2]);
                 minimums.insert(
                     cube_color,
@@ -45,11 +45,11 @@ fn get_minimum_required_cubes(s: &str) -> i32 {
             .unwrap()
     });
 
-    minimums.iter().map(|(_, &v)| v).fold(1, |x, y| x * y)
+    minimums.iter().map(|(_, &v)| v).product::<i32>()
 }
 
 fn get_power_set(s: &str) -> i32 {
-    get_minimum_required_cubes(s.split(":").skip(1).next().unwrap())
+    get_minimum_required_cubes(s.split(':').nth(1).unwrap())
 }
 
 fn main() {
