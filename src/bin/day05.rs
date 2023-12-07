@@ -57,7 +57,8 @@ fn main() {
         min_distance = min_distance.min(cur_thread.join().unwrap());
         println!(
             "{} threads finished, {} threads remaining",
-            num_threads - join_handles.len() as i64, join_handles.len()
+            num_threads - join_handles.len() as i64,
+            join_handles.len()
         );
     }
 
