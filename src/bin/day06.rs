@@ -20,7 +20,6 @@ fn main() {
                 .nth(1)
                 .unwrap()
                 .chars()
-                .into_iter()
                 .filter(|x| x != &' ')
                 .collect::<String>()
                 .parse::<u64>()
