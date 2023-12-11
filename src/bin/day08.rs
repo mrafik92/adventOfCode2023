@@ -1,6 +1,6 @@
-use std::collections::HashMap;
 use num_integer::lcm;
 use regex::Regex;
+use std::collections::HashMap;
 
 extern crate num_integer;
 
@@ -13,25 +13,34 @@ fn main() {
 }
 
 fn get_directions_and_map(input: &str) -> (Vec<i32>, HashMap<&str, Vec<&str>>) {
-    let directions = input.lines().next().unwrap().chars().map(|x| match x {
-        'R' => 1,
-        'L' => 0,
-        _ => panic!("unknown direction")
-    }).collect::<Vec<_>>();
+    let directions = input
+        .lines()
+        .next()
+        .unwrap()
+        .chars()
+        .map(|x| match x {
+            'R' => 1,
+            'L' => 0,
+            _ => panic!("unknown direction"),
+        })
+        .collect::<Vec<_>>();
 
     let re = Regex::new(r"(.*) = \((.*), (.*)\)").unwrap();
 
+    let map: Vec<_> = input
+        .lines()
+        .skip(2)
+        .map(|x| {
+            let mut results = vec![];
 
-    let map: Vec<_> = input.lines().skip(2).map(|x| {
-        let mut results = vec![];
-
-        for (_a, [x, xx, xxx]) in re.captures_iter(x).map(|c| c.extract::<3>()) {
-            results.push(x);
-            results.push(xx);
-            results.push(xxx);
-        }
-        results
-    }).collect();
+            for (_a, [x, xx, xxx]) in re.captures_iter(x).map(|c| c.extract::<3>()) {
+                results.push(x);
+                results.push(xx);
+                results.push(xxx);
+            }
+            results
+        })
+        .collect();
 
     let mut initial_map = HashMap::new();
     map.iter().fold(&mut initial_map, |acc, entry| {
@@ -48,7 +57,11 @@ fn part_1(initial_map: HashMap<&str, Vec<&str>>, directions: Vec<i32>) -> u128 {
     while loc != &"ZZZ" {
         let direction = directions[(counter % directions.len() as u128) as usize];
         counter += 1;
-        loc = initial_map.get(loc).unwrap().get(direction as usize).unwrap();
+        loc = initial_map
+            .get(loc)
+            .unwrap()
+            .get(direction as usize)
+            .unwrap();
     }
     counter
 }
@@ -67,7 +80,11 @@ fn part_2_brute_force(initial_map: HashMap<&str, Vec<&str>>, directions: Vec<i32
         let direction = directions[(counter % directions.len() as u128) as usize];
         counter += 1;
         for loc in start_entries.iter_mut() {
-            *loc = initial_map.get(loc).unwrap().get(direction as usize).unwrap();
+            *loc = initial_map
+                .get(loc)
+                .unwrap()
+                .get(direction as usize)
+                .unwrap();
         }
 
         if start_entries.iter().any(|loc| loc.ends_with('Z')) {
@@ -93,7 +110,11 @@ fn part_2_lcm(initial_map: HashMap<&str, Vec<&str>>, directions: Vec<i32>) -> u1
         while !loc.ends_with('Z') {
             let direction = directions[(counter % directions.len() as u128) as usize];
             counter += 1;
-            loc = initial_map.get(loc).unwrap().get(direction as usize).unwrap();
+            loc = initial_map
+                .get(loc)
+                .unwrap()
+                .get(direction as usize)
+                .unwrap();
         }
         locations_counter.push(counter);
         counter = 0;
@@ -123,11 +144,10 @@ mod tests {
                 println!("{:?}", xx);
                 let mut results = vec![];
 
-                xx.iter().skip(1).for_each(|x|
-                    match x {
-                        None => {}
-                        Some(y) => { results.push(y.as_str()) }
-                    });
+                xx.iter().skip(1).for_each(|x| match x {
+                    None => {}
+                    Some(y) => results.push(y.as_str()),
+                });
 
                 println!("{:?}", results)
             }
